@@ -99,7 +99,7 @@
 // [main_def_pio_irq_prior]
 
 /** LED0 blink time, LED1 blink half this time, in ms */
-#define BLINK_PERIOD     1000
+#define BLINK_PERIOD     10000
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Getting Started Example --\r\n" \
@@ -138,11 +138,14 @@ extern "C" {
  */
 static void ProcessButtonEvt(uint8_t uc_button)
 {
+	int ps;
 // [main_button1_evnt_process]
 	if (uc_button == 0) {
 		g_b_led0_active = !g_b_led0_active;
 		if (!g_b_led0_active) {
 			ioport_set_pin_level(LED0_GPIO, IOPORT_PIN_LEVEL_HIGH);
+			ps = 1000;
+			mdelay(ps);
 		}
 	}
 // [main_button1_evnt_process]
@@ -419,6 +422,9 @@ int main(void)
 		if (g_b_led0_active) {
 			ioport_toggle_pin_level(LED0_GPIO);
 			printf("1 ");
+			uint cpufrequencia;
+			cpufrequencia = sysclk_get_cpu_hz();
+			
 		}
 
 		/* Wait for 500ms */
