@@ -117,10 +117,10 @@ int main(void)
 	ledConfig();
 	
 	// Configura botao
-	PMC ->PMC_PCER0 = (1<<10);
-	PIOA ->PIO_PER = (1<<11);
-	PIOA ->PIO_ODR = (1<<11);
-	PIOA ->PIO_PUER = (1<<11);
+	PMC ->PMC_PCER0 = (1<<10);	// Ativa o clock do PIO que controla o botão no PMC
+	PIOA ->PIO_PER = (1<<11);	// Ativa o PIO para controlar o pino do botão
+	PIOA ->PIO_ODR = (1<<11);	// Desativa o buffer de saída
+	PIOA ->PIO_PUER = (1<<11);	// Ativa o pull-up
 	PIOA ->PIO_IFER = (1<<11);
 	/************************************************************************/
 	/* Super loop                                                           */

@@ -2495,19 +2495,19 @@ int main(void)
   400cc6:	4798      	blx	r3
 	
 	// Configura botao
-	PMC ->PMC_PCER0 = (1<<10);
+	PMC ->PMC_PCER0 = (1<<10);	// Ativa o clock do PIO que controla o botão no PMC
   400cc8:	4b14      	ldr	r3, [pc, #80]	; (400d1c <main+0x68>)
   400cca:	f44f 6280 	mov.w	r2, #1024	; 0x400
   400cce:	611a      	str	r2, [r3, #16]
-	PIOA ->PIO_PER = (1<<11);
+	PIOA ->PIO_PER = (1<<11);	// Ativa o PIO para controlar o pino do botão
   400cd0:	4b13      	ldr	r3, [pc, #76]	; (400d20 <main+0x6c>)
   400cd2:	f44f 6200 	mov.w	r2, #2048	; 0x800
   400cd6:	601a      	str	r2, [r3, #0]
-	PIOA ->PIO_ODR = (1<<11);
+	PIOA ->PIO_ODR = (1<<11);	// Desativa o buffer de saída
   400cd8:	4b11      	ldr	r3, [pc, #68]	; (400d20 <main+0x6c>)
   400cda:	f44f 6200 	mov.w	r2, #2048	; 0x800
   400cde:	615a      	str	r2, [r3, #20]
-	PIOA ->PIO_PUER = (1<<11);
+	PIOA ->PIO_PUER = (1<<11);	// Ativa o pull-up
   400ce0:	4b0f      	ldr	r3, [pc, #60]	; (400d20 <main+0x6c>)
   400ce2:	f44f 6200 	mov.w	r2, #2048	; 0x800
   400ce6:	665a      	str	r2, [r3, #100]	; 0x64
