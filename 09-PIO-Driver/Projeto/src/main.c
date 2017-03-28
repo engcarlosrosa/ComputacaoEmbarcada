@@ -61,12 +61,7 @@ void led_init(int estado){
  */
 void but_init(void){
 	_pmc_enable_periph_clock(BUT_PIO_ID);					// Ativa o clock no periferico					  (ID do periférico)
-	BUT_PIO->PIO_ODR	 = BUT_PIN_MASK;					// Desativa saída do registrador                  (Output DISABLE register)
-	BUT_PIO->PIO_PER	 = BUT_PIN_MASK;					// Ativa controle do pino no PIO no registrador   (PIO ENABLE register)
-	BUT_PIO->PIO_PUER	 = BUT_PIN_MASK;					// Ativa pull-up no PIO no registrador            (PullUp ENABLE register)
-	BUT_PIO->PIO_IFER	 = BUT_PIN_MASK;					// Ativa debouncing
-	BUT_PIO->PIO_IFSCER  = BUT_PIN_MASK;					// Ativa clock periferico
-	BUT_PIO->PIO_SCDR	 = BUT_DEBOUNCING_VALUE;			// Configura a frequencia do debouncing
+	_pio_set_input(BUT_PIO, BUT_PIN_MASK, PIO_PULLUP /*| PIO_DEGLITCH */ | PIO_DEBOUNCE );
 };
 
 
@@ -105,13 +100,15 @@ int main(void)
 		* @Brief Verifica constantemente o status do botão
 		* 1 : não apertado
 		* 0 : apertado
-		*/
-	    if(BUT_PIO->PIO_PDSR & (BUT_PIN_MASK)){ /*Pin Data Status Register*/
-			LED_PIO->PIO_CODR = LED_PIN_MASK; /*Clear Output Data Register*/
+		
+	    if(BUT_PIO->PIO_PDSR & (BUT_PIN_MASK)){ //Pin Data Status Register
+			LED_PIO->PIO_CODR = LED_PIN_MASK; /Clear Output Data Register
         }
 		else{
-			LED_PIO->PIO_SODR = LED_PIN_MASK; /*Set Output Data Register*/
+			LED_PIO->PIO_SODR = LED_PIN_MASK; /Set Output Data Register
         }
+		*/
+		 _pio_get_output_data_status(BUT_PIO, BUT_PIN_MASK);			//Função que verifica constantemente o status do botão
 	};
 }
 
