@@ -111,11 +111,13 @@ SUBDIRS :=  \
 ../src/ASF/thirdparty/CMSIS/Include/ \
 ../src/ASF/thirdparty/CMSIS/Lib/ \
 ../src/ASF/thirdparty/CMSIS/Lib/GCC/ \
-../src/config/
+../src/config/ \
+../src/com
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../src/com/com.c \
 ../src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_same70.c \
 ../src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_same70.c \
 ../src/ASF/common/components/wifi/winc1500/common/source/nm_common.c \
@@ -164,6 +166,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+src/com/com.o \
 src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_same70.o \
 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_same70.o \
 src/ASF/common/components/wifi/winc1500/common/source/nm_common.o \
@@ -205,6 +208,7 @@ src/ASF/sam/utils/syscalls/gcc/syscalls.o \
 src/main.o
 
 OBJS_AS_ARGS +=  \
+src/com/com.o \
 src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_same70.o \
 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_same70.o \
 src/ASF/common/components/wifi/winc1500/common/source/nm_common.o \
@@ -246,6 +250,7 @@ src/ASF/sam/utils/syscalls/gcc/syscalls.o \
 src/main.o
 
 C_DEPS +=  \
+src/com/com.d \
 src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_same70.d \
 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_same70.d \
 src/ASF/common/components/wifi/winc1500/common/source/nm_common.d \
@@ -287,6 +292,7 @@ src/ASF/sam/utils/syscalls/gcc/syscalls.d \
 src/main.d
 
 C_DEPS_AS_ARGS +=  \
+src/com/com.d \
 src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_same70.d \
 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_same70.d \
 src/ASF/common/components/wifi/winc1500/common/source/nm_common.d \
@@ -327,9 +333,9 @@ src/ASF/sam/utils/cmsis/same70/source/templates/system_same70.d \
 src/ASF/sam/utils/syscalls/gcc/syscalls.d \
 src/main.d
 
-OUTPUT_FILE_PATH +=WIFI-getWeather-EXT1.elf
+OUTPUT_FILE_PATH +=WIFI-TCPIP-EXT1.elf
 
-OUTPUT_FILE_PATH_AS_ARGS +=WIFI-getWeather-EXT1.elf
+OUTPUT_FILE_PATH_AS_ARGS +=WIFI-TCPIP-EXT1.elf
 
 ADDITIONAL_DEPENDENCIES:=
 
@@ -420,6 +426,15 @@ LINKER_SCRIPT_DEP+=  \
 
 
 
+
+
+
+src/com/%.o: ../src/com/%.c
+	@echo Building file: $<
+	@echo Invoking: ARM/GNU C Compiler : 5.3.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAME70Q21__ -DDEBUG -D__SAME70Q21__ -DBOARD=SAME70_XPLAINED -Dscanf=iscanf -DARM_MATH_CM7=true -Dprintf=iprintf  -I"../src/ASF/sam/drivers/tc" -I"../src/ASF/sam/drivers/pmc" -I"../src/ASF/sam/utils" -I"../src/ASF/sam/utils/header_files" -I"../src/ASF/sam/utils/preprocessor" -I"../src/ASF/thirdparty/CMSIS/Include" -I"../src/ASF/thirdparty/CMSIS/Lib/GCC" -I"../src/ASF/sam/utils/fpu" -I"../src/ASF/common/utils" -I"../src/ASF/sam/utils/cmsis/same70/include" -I"../src/ASF/sam/utils/cmsis/same70/source/templates" -I"../src/ASF/sam/drivers/pio" -I"../src/ASF/common/services/ioport" -I"../src/ASF/common/services/clock" -I"../src/ASF/common/utils/stdio/stdio_serial" -I"../src/ASF/common/services/serial/sam_uart" -I"../src/ASF/common/services/serial" -I"../src/ASF/sam/drivers/uart" -I"../src/ASF/sam/drivers/usart" -I"../src/ASF/sam/boards/same70_xplained" -I"../src/ASF/sam/boards" -I"../src/ASF/common/boards" -I"../src/ASF/common/services/gpio" -I"../src/ASF/sam/drivers/mpu" -I"../src/ASF/sam/drivers/matrix" -I"../src" -I"../src/config" -I"../src/ASF/sam/drivers/twihs" -I"../src/ASF/common/components/wifi/winc1500" -I"../src/ASF/common/services/delay" -I"../src/ASF/sam/drivers/spi"  -O1 -fdata-sections -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m7 -c -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -mfloat-abi=softfp -mfpu=fpv5-sp-d16 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
 
 src/ASF/common/components/wifi/winc1500/bsp/source/%.o: ../src/ASF/common/components/wifi/winc1500/bsp/source/%.c
 	@echo Building file: $<
@@ -621,14 +636,14 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER_SCRIPT_DEP)
 	@echo Building target: $@
 	@echo Invoking: ARM/GNU Linker : 5.3.1
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="WIFI-getWeather-EXT1.map" -Wl,--start-group -larm_cortexM7lfsp_math_softfp -lm  -Wl,--end-group -L"../src/ASF/thirdparty/CMSIS/Lib/GCC"  -Wl,--gc-sections -mcpu=cortex-m7 -Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam/utils/linker_scripts/same70/same70q21/gcc/flash.ld  
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -mthumb -Wl,-Map="WIFI-TCPIP-EXT1.map" -Wl,--start-group -larm_cortexM7lfsp_math_softfp -lm  -Wl,--end-group -L"../src/ASF/thirdparty/CMSIS/Lib/GCC"  -Wl,--gc-sections -mcpu=cortex-m7 -Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam/utils/linker_scripts/same70/same70q21/gcc/flash.ld  
 	@echo Finished building target: $@
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "WIFI-getWeather-EXT1.elf" "WIFI-getWeather-EXT1.bin"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "WIFI-getWeather-EXT1.elf" "WIFI-getWeather-EXT1.hex"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "WIFI-getWeather-EXT1.elf" "WIFI-getWeather-EXT1.eep" || exit 0
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "WIFI-getWeather-EXT1.elf" > "WIFI-getWeather-EXT1.lss"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "WIFI-getWeather-EXT1.elf" "WIFI-getWeather-EXT1.srec"
-	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "WIFI-getWeather-EXT1.elf"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O binary "WIFI-TCPIP-EXT1.elf" "WIFI-TCPIP-EXT1.bin"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "WIFI-TCPIP-EXT1.elf" "WIFI-TCPIP-EXT1.hex"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -j .eeprom --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0 --no-change-warnings -O binary "WIFI-TCPIP-EXT1.elf" "WIFI-TCPIP-EXT1.eep" || exit 0
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objdump.exe" -h -S "WIFI-TCPIP-EXT1.elf" > "WIFI-TCPIP-EXT1.lss"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-objcopy.exe" -O srec -R .eeprom -R .fuse -R .lock -R .signature  "WIFI-TCPIP-EXT1.elf" "WIFI-TCPIP-EXT1.srec"
+	"C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-size.exe" "WIFI-TCPIP-EXT1.elf"
 	
 	
 
@@ -640,5 +655,5 @@ $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP) $(LINKER
 clean:
 	-$(RM) $(OBJS_AS_ARGS) $(EXECUTABLES)  
 	-$(RM) $(C_DEPS_AS_ARGS)   
-	rm -rf "WIFI-getWeather-EXT1.elf" "WIFI-getWeather-EXT1.a" "WIFI-getWeather-EXT1.hex" "WIFI-getWeather-EXT1.bin" "WIFI-getWeather-EXT1.lss" "WIFI-getWeather-EXT1.eep" "WIFI-getWeather-EXT1.map" "WIFI-getWeather-EXT1.srec"
+	rm -rf "WIFI-TCPIP-EXT1.elf" "WIFI-TCPIP-EXT1.a" "WIFI-TCPIP-EXT1.hex" "WIFI-TCPIP-EXT1.bin" "WIFI-TCPIP-EXT1.lss" "WIFI-TCPIP-EXT1.eep" "WIFI-TCPIP-EXT1.map" "WIFI-TCPIP-EXT1.srec"
 	

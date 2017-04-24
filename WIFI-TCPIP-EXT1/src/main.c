@@ -1,43 +1,4 @@
-/**
- *
- * \file
- *
- * \brief WINC1500 TCP Server Example.
- *
- * Copyright (c) 2016 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
+
 
 /** \mainpage
  * \section intro Introduction
@@ -102,11 +63,13 @@
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
+#include "com/com.h"
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- WINC1500 TCP server example --"STRING_EOL \
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
+ 
 
 /** Message format definitions. */
 typedef struct s_msg_wifi_product {
@@ -127,6 +90,11 @@ static SOCKET tcp_client_socket = -1;
 
 /** Wi-Fi connection state */
 static uint8_t wifi_connected;
+
+
+/** contador de mensagens */
+
+uint32_t g_nMensagensRx = 0 ;
 
 /**
  * \brief Configure UART console.
@@ -232,19 +200,36 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 		tstrSocketRecvMsg *pstrRecv = (tstrSocketRecvMsg *)pvMsg;
 		if (pstrRecv && pstrRecv->s16BufferSize > 0) {
 			
-			printf("socket_cb: recv success!\r\n");
-			printf(" -------- \n", gau8SocketTestBuffer);
+			//printf("socket_cb: recv success!\r\n");
+			//printf(" -------- \n", gau8SocketTestBuffer);
+			g_nMensagensRx++;
+			printf("Mensagem recebida do PUTTY: numero %d \n", g_nMensagensRx);
+			
 			printf("%s \n", gau8SocketTestBuffer);
 			printf(" -------- \n", gau8SocketTestBuffer);
 			
 			send(tcp_client_socket, gau8SocketTestBuffer, sizeof(gau8SocketTestBuffer), 0);
-
 			
+			/************************************************************************/
+			/*               Checando comandos                                                        */
+			/************************************************************************/
+			char pacoteTipo;
+			pacoteTipo = com_interpretando_buffer(gau8SocketTestBuffer);
+			switch (pacoteTipo){
+				case pacoteTesteCom:
+				
+				break;
+				
+				case pacoteERRO:
+				break;			
+				
+			}
 			uint16 i;
 			for(i=0;i< sizeof(gau8SocketTestBuffer); i++)
 				gau8SocketTestBuffer[i] = 0;
 			
 			recv(tcp_client_socket, gau8SocketTestBuffer, sizeof(gau8SocketTestBuffer), 0);	
+			
 		} else {
 			printf("socket_cb: recv error!\r\n");
 			close(tcp_server_socket);

@@ -177,7 +177,8 @@ src/main.d src/main.o: ../src/main.c ../src/asf.h \
  ../src/ASF/common/components/wifi/winc1500/driver/include/m2m_wifi.h \
  ../src/ASF/common/components/wifi/winc1500/driver/include/m2m_types.h \
  ../src/ASF/common/components/wifi/winc1500/driver/source/nmdrv.h \
- ../src/ASF/common/components/wifi/winc1500/socket/include/socket.h
+ ../src/ASF/common/components/wifi/winc1500/socket/include/socket.h \
+ ../src/com/com.h
 
 ../src/asf.h:
 
@@ -550,3 +551,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/ASF/common/components/wifi/winc1500/driver/source/nmdrv.h:
 
 ../src/ASF/common/components/wifi/winc1500/socket/include/socket.h:
+
+../src/com/com.h:

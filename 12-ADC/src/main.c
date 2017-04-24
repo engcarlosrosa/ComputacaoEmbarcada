@@ -63,7 +63,7 @@ volatile uint32_t g_ul_value = 0;
 /************************************************************************/
 
 void TC0_init(void);
-
+void RTC_init(void);
 
 /************************************************************************/
 /* Funcoes                                                              */
@@ -186,9 +186,54 @@ void TC0_Handler(void){
 	UNUSED(ul_dummy);
 
 	/** Inicializa a conversao */
-         afec_start_software_conversion(AFEC0);
+    afec_start_software_conversion(AFEC0);
 }
 
+
+/**
+ * \brief Interrupt handler for the RTC. Refresh the display.
+ */
+void RTC_Handler(void)
+{
+	uint32_t ul_status = rtc_get_status(RTC);
+
+	/* Second increment interrupt */
+	if ((ul_status & RTC_SR_SEC) == RTC_SR_SEC) {
+	
+		rtc_clear_status(RTC, RTC_SCCR_SECCLR);
+
+	} else {
+		/* Time or date alarm */
+		if ((ul_status & RTC_SR_ALARM) == RTC_SR_ALARM) {
+            
+			/*Atualiza hora */ 
+			uint32_t ano, mes, dia, hora, minuto, segundo;	
+			
+			rtc_get_time(RTC, &hora, &minuto, &segundo);
+			rtc_get_date(RTC, &ano, &mes, &dia, NULL);
+
+			/* incrementa minuto */
+			minuto++;		   
+
+	       /* configura alarme do RTC */
+			rtc_set_date_alarm(RTC, 1, mes, 1, dia);
+		    rtc_set_time_alarm(RTC, 1, hora, 1, minuto, 1, 0);
+
+			/* inverte status led */
+			flag_led0 ^= 1;
+
+		   /* Ativa/desativa o TimerCounter */
+		   if (flag_led0)
+		   {
+			   tc_start(TC0, 0);
+		   }else{
+			   tc_stop(TC0, 0);
+		   }
+		   
+			rtc_clear_status(RTC, RTC_SCCR_ALRCLR);
+		}
+	}
+}
 
 /************************************************************************/
 /* Main                                                                 */
@@ -269,10 +314,10 @@ int main(void)
 	while (1) {
 		if(is_conversion_done == true) {
 			is_conversion_done = false;
-      
-      printf("Temp : %d \r\n", (int) convert_adc_to_temp(g_ul_value) ); //a funcao  convert_adc_to_temp recebe o parametro g_ul_value em volts e transforma ele em graus Celsius.
-     
-     
+
+			 printf("Temp : %d \r\n", (int) convert_adc_to_temp(g_ul_value) ); //a funcao  convert_adc_to_temp recebe o parametro g_ul_value em volts e transforma ele em graus Celsius.
 		}
 	}
 }
+
+rtc_ge
