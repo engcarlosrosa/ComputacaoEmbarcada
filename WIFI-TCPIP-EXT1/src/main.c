@@ -63,7 +63,8 @@
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
-#include "com/com.h"
+//#include "com/com.h"
+//#include "com/mensagens.h"
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- WINC1500 TCP server example --"STRING_EOL \
@@ -193,17 +194,19 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 		//close(tcp_server_socket);
 	}
 	break;
-
+	
 	/* Message receive */
 	case SOCKET_MSG_RECV:
 	{
 		tstrSocketRecvMsg *pstrRecv = (tstrSocketRecvMsg *)pvMsg;
 		if (pstrRecv && pstrRecv->s16BufferSize > 0) {
 			
-			//printf("socket_cb: recv success!\r\n");
-			//printf(" -------- \n", gau8SocketTestBuffer);
-			g_nMensagensRx++;
-			printf("Mensagem recebida do PUTTY: numero %d \n", g_nMensagensRx);
+			printf("socket_cb: recv success!\r\n");
+			printf(" -------- \n", gau8SocketTestBuffer);
+			
+			
+			//g_nMensagensRx++;
+			//printf("Mensagem recebida do PUTTY: numero %d \n", g_nMensagensRx);
 			
 			printf("%s \n", gau8SocketTestBuffer);
 			printf(" -------- \n", gau8SocketTestBuffer);
@@ -213,8 +216,10 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 			/************************************************************************/
 			/*               Checando comandos                                                        */
 			/************************************************************************/
+			/*
 			char pacoteTipo;
 			pacoteTipo = com_interpretando_buffer(gau8SocketTestBuffer);
+			
 			switch (pacoteTipo){
 				case pacoteTesteCom:
 				
@@ -223,7 +228,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 				case pacoteERRO:
 				break;			
 				
-			}
+			}*/
 			uint16 i;
 			for(i=0;i< sizeof(gau8SocketTestBuffer); i++)
 				gau8SocketTestBuffer[i] = 0;
