@@ -327,6 +327,8 @@ int main(void){
   /* Initialize the SAM system */
   sysclk_init();
    
+  board_init();
+  
   /* Disable the watchdog */
   WDT->WDT_MR = WDT_MR_WDDIS;
 
@@ -358,7 +360,7 @@ int main(void){
 		/*Entra em modo sleep */
 		if (flag_rx)
 		{
-			printf("RX: %s", g_rx_buffer);
+			//printf("RX: %s", g_rx_buffer);
 			flag_rx = 0;
 		}
 	}
