@@ -97,6 +97,16 @@
 #define TASK_LED_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
 #define TASK_LED_STACK_PRIORITY            (tskIDLE_PRIORITY)
 
+#define TASK_BUTTON_STACK_SIZE                (1024/sizeof(portSTACK_TYPE))
+#define TASK_BUTTON_STACK_PRIORITY            (tskIDLE_PRIORITY)
+/**
+ * LEDs
+ */
+#define LED_PIO_ID		ID_PIOC
+#define LED_PIO         PIOC
+#define LED_PIN		    8
+#define LED_PIN_MASK    (1<<LED_PIN)
+
 /**
  * LEDs 1 da OLED1 Xplained Pro
  */
@@ -241,13 +251,13 @@ void led_init(int estado){
 
 void but_init(void){
 	
-	/**
-	 * Botão da SAME70
-	 */
-	
-    /* config. pino botao em modo de entrada */
-    pmc_enable_periph_clk(BUT_PIO_ID);
-    pio_set_input(BUT_PIO, BUT_PIN_MASK, PIO_PULLUP | PIO_DEBOUNCE);
+	PMC->PMC_PCER0       = (1<<BUT_PIO_ID);     // Ativa clock do periférico no PMC
+	BUT_PIO->PIO_ODR	 = BUT_PIN_MASK;        // Desativa saída                   (Output DISABLE register)
+	BUT_PIO->PIO_PER	 = BUT_PIN_MASK;        // Ativa controle do pino no PIO    (PIO ENABLE register)
+	BUT_PIO->PIO_PUER	 = BUT_PIN_MASK;        // Ativa pull-up no PIO             (PullUp ENABLE register)
+	BUT_PIO->PIO_IFER	 = BUT_PIN_MASK;        // Ativa debouncing
+	BUT_PIO->PIO_IFSCER  = BUT_PIN_MASK;        // Ativa clock periferico
+	BUT_PIO->PIO_SCDR	 = BUT_DEBOUNCING_VALUE;// Configura a frequencia do debouncing
   
 }
 
@@ -298,6 +308,19 @@ static void task_led_OLED_3(void *pvParameters)
 		else
 			pio_set(LED_PIO_3,LED_PIN_MASK_3);
 		vTaskDelay(500);
+	}
+}
+
+static void task_button_SAME70 (void *pvParameters)
+{
+	UNUSED(pvParameters);
+	for (;;) {
+		if(BUT_PIO->PIO_PDSR & (BUT_PIN_MASK)){
+			LED_PIO->PIO_CODR = LED_PIN_MASK;
+		}
+		else{
+			LED_PIO->PIO_SODR = LED_PIN_MASK;
+		}
 	}
 }
 
@@ -362,7 +385,12 @@ int main(void)
 			TASK_MONITOR_STACK_PRIORITY, NULL) != pdPASS) {
 		printf("Failed to create Monitor task\r\n");
 	}
-
+	/* Create task to button */
+	if (xTaskCreate(task_button_SAME70, "Button", TASK_BUTTON_STACK_SIZE, NULL,
+			TASK_BUTTON_STACK_PRIORITY, NULL) != pdPASS) {
+		printf("Failed to create test button task\r\n");
+	}
+	
 	/* Create task to make led blink */
 	if (xTaskCreate(task_led, "Led", TASK_LED_STACK_SIZE, NULL,
 			TASK_LED_STACK_PRIORITY, NULL) != pdPASS) {

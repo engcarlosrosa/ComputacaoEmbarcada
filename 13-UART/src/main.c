@@ -158,7 +158,7 @@ uint32_t usart_puts(uint8_t *pstring){
 		//usart_serial_putchar(USART_COM, pstring[i]);
 		while (uart_is_tx_empty(USART_COM))
 		{
-			if (pstring[i]=='\0')
+			if (pstring[i]==0x00)
 			{
 				return 0;
 			} 
