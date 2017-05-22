@@ -4290,6 +4290,10 @@ void led_init(int estado){
   40163e:	b085      	sub	sp, #20
   401640:	af02      	add	r7, sp, #8
   401642:	6078      	str	r0, [r7, #4]
+	
+	/**
+	 * @Brief Inicializa o pino do LED da SAME70
+	 */
     pmc_enable_periph_clk(LED_PIO_ID);
   401644:	200c      	movs	r0, #12
   401646:	4b18      	ldr	r3, [pc, #96]	; (4016a8 <led_init+0x6c>)
@@ -4304,6 +4308,9 @@ void led_init(int estado){
   401658:	4c15      	ldr	r4, [pc, #84]	; (4016b0 <led_init+0x74>)
   40165a:	47a0      	blx	r4
 	
+	/**
+	 * @Brief Inicializa o pino do LED 1 da OLED1 Xplained Pro
+	 */
 	pmc_enable_periph_clk(LED_PIO_ID_1);
   40165c:	200a      	movs	r0, #10
   40165e:	4b12      	ldr	r3, [pc, #72]	; (4016a8 <led_init+0x6c>)
@@ -4318,6 +4325,10 @@ void led_init(int estado){
   40166e:	4c10      	ldr	r4, [pc, #64]	; (4016b0 <led_init+0x74>)
   401670:	47a0      	blx	r4
 	
+	
+	/**
+	 * @Brief Inicializa o pino do LED 2 da OLED1 Xplained Pro
+	 */	
 	pmc_enable_periph_clk(LED_PIO_ID_2);
   401672:	200c      	movs	r0, #12
   401674:	4b0c      	ldr	r3, [pc, #48]	; (4016a8 <led_init+0x6c>)
@@ -4331,7 +4342,11 @@ void led_init(int estado){
   401684:	4809      	ldr	r0, [pc, #36]	; (4016ac <led_init+0x70>)
   401686:	4c0a      	ldr	r4, [pc, #40]	; (4016b0 <led_init+0x74>)
   401688:	47a0      	blx	r4
-	
+
+
+	/**
+	 * @Brief Inicializa o pino do LED 3 da OLED1 Xplained Pro
+	 */
 	pmc_enable_periph_clk(LED_PIO_ID_3);
   40168a:	200b      	movs	r0, #11
   40168c:	4b06      	ldr	r3, [pc, #24]	; (4016a8 <led_init+0x6c>)
@@ -4426,7 +4441,7 @@ void but_init(void){
   40170c:	4b2d      	ldr	r3, [pc, #180]	; (4017c4 <but_init+0x108>)
   40170e:	4798      	blx	r3
 	
-	/* config. interrupcao em borda de descida no botao do kit */
+	/* config. interrupcao em borda de subida no botao do kit */
 	/* indica funcao (but_Handler) a ser chamada quando houver uma interrupção */
 	pio_enable_interrupt(BUT_PIO_1, BUT_PIN_MASK_1);
   401710:	f04f 5180 	mov.w	r1, #268435456	; 0x10000000
@@ -4514,7 +4529,7 @@ void but_init(void){
   401784:	4b0f      	ldr	r3, [pc, #60]	; (4017c4 <but_init+0x108>)
   401786:	4798      	blx	r3
 	
-	/* config. interrupcao em borda de descida no botao do kit */
+	/* config. interrupcao em borda de subida e descida no botao do kit */
 	/* indica funcao (but_Handler) a ser chamada quando houver uma interrupção */
 	pio_enable_interrupt(BUT_PIO_3, BUT_PIN_MASK_3);
   401788:	f44f 2100 	mov.w	r1, #524288	; 0x80000

@@ -155,12 +155,21 @@ uint32_t usart_puts(uint8_t *pstring){
 
 	while (pstring[i])
 	{
+		//usart_serial_putchar(USART_COM, pstring[i]);
 		while (uart_is_tx_empty(USART_COM))
 		{
-			usart_serial_putchar(USART_COM, pstring[i]);
-			i++;
+			if (pstring[i]=='\0')
+			{
+				return 0;
+			} 
+			else
+			{
+				usart_serial_putchar(USART_COM, pstring[i]);
+				i++;
+			}
+				
+			}
 		}
-	}
 	
   return 1;
 }
@@ -175,17 +184,20 @@ uint32_t usart_puts(uint8_t *pstring){
 uint32_t usart_gets(uint8_t *pstring){
 	char * ch = pstring;
 	int k;
+	//static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 	/*
-	while((k = usart_serial_getchar ()) != '\n'){
-		if(k == EOF){
-			if(ch == pstring || ! feof(stdin))
-				return NULL;
-				
-			break;
-		}
-		*ch++ = k;
-	}*/
-	
+			while((k = usart_serial_getchar (*ch)) != '\n'){
+				if(k == EOF){
+					if(ch == pstring || ! feof(stdin))
+					return NULL;
+					
+					break;
+				}
+				*ch++ = k;
+			}
+	}
+
+	*/
 	*ch = '\0';
 
   return pstring;  
@@ -216,7 +228,8 @@ int main(void){
   delay_init( sysclk_get_cpu_hz());
         
 	while (1) {
-    sprintf(bufferTX, "%s : %d \n", "Ola Voce", i++);
+
+		sprintf(bufferTX, "%s : %d \n", "Ola Voce", i++);
    //	usart_serial_putchar(USART_COM, 'c');
     usart_puts(bufferTX);
    // usart_gets(bufferRX);
