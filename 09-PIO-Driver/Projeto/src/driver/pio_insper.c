@@ -28,7 +28,7 @@ void _pio_set_output(	Pio *p_pio,
 		} 
 	else{p_pio->PIO_PUDR = ul_mask;
 	}
-	
+	/*Retirado do 08-PIO_INPUT*/
 	/*
 	PMC->PMC_PCER0    = (1<<LED_PIO_ID);
 	LED_PIO->PIO_PER  = LED_PIN_MASK;
@@ -77,19 +77,51 @@ void _pio_set_output(	Pio *p_pio,
 	*/
 	 p_pio->PIO_ODR = ul_mask;						// Desativa saída do registrador                  (Output DISABLE register)
 	 p_pio->PIO_PER = ul_mask;						// Ativa controle do pino no PIO no registrador   (PIO ENABLE register)
+	
+	/*_pio_pull_up(p_pio, ul_mask, 1);*/
+	
 	_pio_pull_up(p_pio, ul_mask,
 			 ul_attribute & PIO_PULLUP);			// Ativa pull-up no PIO no registrador            (PullUp ENABLE register)
 	 if (ul_attribute & PIO_DEBOUNCE)
 	 {p_pio->PIO_IFER = ul_mask;
 		}											// Ativa debouncing
+		
  }
  
 	uint32_t _pio_get_output_data_status(const Pio *p_pio,
 									 const uint32_t ul_mask){
 	 if (p_pio->PIO_PDSR & ul_mask)					///Pin Data Status Register
-	 {PIOC->PIO_CODR = (1<<8);						//Clear Output Data Register
+	 {
+		 return 1;						
 	 } 
 	 else
-	 {PIOC->PIO_SODR = (1<<8);						//Set Output Data Register
+	 {
+		 return 0;						
 	 }
  }
+ 
+/**
+ * \brief Set a high output level on all the PIOs defined in ul_mask.
+ * This has no immediate effects on PIOs that are not output, but the PIO
+ * controller will save the value if they are changed to outputs.
+ *
+ * \param p_pio Pointer to a PIO instance.
+ * \param ul_mask Bitmask of one or more pin(s) to configure.
+ */
+void _pio_set(   Pio *p_pio, 
+                const uint32_t ul_mask){
+					p_pio->PIO_SODR = ul_mask;
+				}
+
+/**
+ * \brief Set a low output level on all the PIOs defined in ul_mask.
+ * This has no immediate effects on PIOs that are not output, but the PIO
+ * controller will save the value if they are changed to outputs.
+ *
+ * \param p_pio Pointer to a PIO instance.
+ * \param ul_mask Bitmask of one or more pin(s) to configure.
+ */
+void _pio_clear( Pio *p_pio, 
+                const uint32_t ul_mask){
+					p_pio->PIO_CODR = ul_mask;
+				}

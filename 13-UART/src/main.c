@@ -182,8 +182,13 @@ uint32_t usart_puts(uint8_t *pstring){
  * Retorna a quantidade de char lidos
  */
 uint32_t usart_gets(uint8_t *pstring){
-	char * ch = pstring;
-	int k;
+	char c;
+	char *dest = s;
+	
+	while ((c = usart_serial_getchar(*pstring)) != '\n' && c != EOF)
+	{
+	}
+	
 	//static inline void usart_serial_getchar(usart_if p_usart, uint8_t *data)
 	/*
 			while((k = usart_serial_getchar (*ch)) != '\n'){
@@ -208,7 +213,7 @@ uint32_t usart_gets(uint8_t *pstring){
 /************************************************************************/
 int main(void){
 
-	int i =0;
+	int i =0;z
   /* Initialize the SAM system */
   sysclk_init();
    

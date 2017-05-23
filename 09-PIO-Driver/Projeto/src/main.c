@@ -96,19 +96,18 @@ int main(void)
 	/************************************************************************/
 
 	while(1){
-		/**
+		/*
 		* @Brief Verifica constantemente o status do botão
 		* 1 : não apertado
 		* 0 : apertado
+		*/
 		
-	    if(BUT_PIO->PIO_PDSR & (BUT_PIN_MASK)){ //Pin Data Status Register
-			LED_PIO->PIO_CODR = LED_PIN_MASK; /Clear Output Data Register
+	    if(_pio_get_output_data_status(BUT_PIO, BUT_PIN_MASK)){ //Pin Data Status Register
+			_pio_clear( LED_PIO, LED_PIN_MASK);	//Clear Output Data Register
         }
 		else{
-			LED_PIO->PIO_SODR = LED_PIN_MASK; /Set Output Data Register
+			 _pio_set(LED_PIO, LED_PIN_MASK); //Set Output Data Register
         }
-		*/
-		 _pio_get_output_data_status(BUT_PIO, BUT_PIN_MASK);			//Função que verifica constantemente o status do botão
 	};
 }
 
